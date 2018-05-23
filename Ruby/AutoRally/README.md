@@ -12,8 +12,8 @@ In order to use this script, you must have Ruby installed - see [Ruby Downloads]
 Written and tested with Ruby 2.4.4-1 (x86)
 
 ##### Ruby Gems
-gem 'watir'
-gem 'watir-scroll'
+gem 'watir'  
+gem 'watir-scroll'  
 
 ##### Rally
 You must have previously created a [Rally](https://www.werally.com "Rally") account, and joined [missions](https://www.werally.com/missions/ "missions").
