@@ -57,6 +57,13 @@ def main()
 
     # Check In to all missions
     browser.divs(class: 'missionsPod').each do |pod|
+    
+        # Skip missions that can only be checked in on a mobile device
+        mobileOnly = pod.div(class: 'mobileCheckIn').exists?
+        if mobileOnly
+            next
+        end
+            
         progressTotal = pod.div(class: 'progressTotal').text   
         
         # Make sure the button is in view before we do anything with it
