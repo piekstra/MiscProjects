@@ -1,3 +1,4 @@
+# Deprecated - Use AutomatedRallyCheckInTabs.rb
 require 'watir'
 require 'watir-scroll'
 
