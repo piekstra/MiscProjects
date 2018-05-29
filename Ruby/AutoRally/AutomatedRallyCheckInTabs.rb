@@ -1,6 +1,25 @@
 require 'watir'
 require 'watir-scroll'
 
+# Intent: Stops the program if input is invalid
+# Returns: email, password
+def validateInputParameters(args)   
+    if ARGV.length < 2
+        puts "Expected username and password."
+        puts "User: #{ARGV[0]}"
+        puts "Password: #{ARGV[1]}"
+        exit
+    elsif ARGV.length > 2
+        puts "Too many arguments. Just enter username and password."
+        exit
+    end
+        
+    # we expect a username and pass here
+    email = ARGV[0]
+    password = ARGV[1]
+    return email, password
+end
+
 def login(browser, email, password)
     # Login
     browser.goto 'https://accounts.werally.com/'
@@ -16,9 +35,14 @@ def goToMissionsPage(browser)
     # We need the following element (the parent of the podContainer) to exist 
     # for the script we execute to get the totalMissions
     until browser.element(css: "div[ng-show='galleryMissions.loaded']").exists? do sleep 1 end
+    lazyLoadHandler(browser)
 end
 
-def lazyLoadHandler(browser, totalMissions, hardLimit)
+def lazyLoadHandler(browser)    
+    hardLimit = 1000
+    #hardLimit = browser.execute_script("return angular.element(document.getElementsByClassName('podContainer')[0]).scope().$parent.limitTotal;")
+    totalMissions = browser.execute_script("return angular.element(document.getElementsByClassName('podContainer')[0]).scope().$parent.galleryMissions.myMissions.length;")
+    
     # Keep scrolling down through lazy loading - be wary of the hard limit
     loop do
         currentCount = browser.divs(class: 'missionsPod').size
@@ -27,48 +51,7 @@ def lazyLoadHandler(browser, totalMissions, hardLimit)
     end
 end
 
-def booleanCheckIn(browser, pod)
-    missionId = pod.button.attribute_value('event-label').split('_')[2]
-    missionUrl = "https://www.werally.com/missions/details/#{missionId}/"
-    browser.execute_script("window.open('#{missionUrl}');")
-    browser.windows.last.use do
-        # Wait until we have the progress section loaded
-        until browser.div(class: 'dailyProgress').exists? do sleep 1 end
-        # Check In if not already
-        yesBtn = browser.button(class: 'yesBtn')
-        if (yesBtn.exists?) then yesBtn.click end
-        browser.windows.last.close
-    end
-end
-
-def main()        
-    if ARGV.length < 2
-        puts "Expected username and password."
-        puts "User: #{ARGV[0]}"
-        puts "Password: #{ARGV[1]}"
-        exit
-    elsif ARGV.length > 2
-        puts "Too many arguments. Just enter username and password."
-        exit
-    end
-    
-    # Using Chrome for this  
-    browser = Watir::Browser.new :chrome
-    
-    # we expect a username and pass here
-    email = ARGV[0]
-    password = ARGV[1]
-    
-    login(browser, email, password)
-    
-    goToMissionsPage(browser)
-    
-    totalMissions = browser.execute_script("return angular.element(document.getElementsByClassName('podContainer')[0]).scope().$parent.galleryMissions.myMissions.length;")
-    #hardLimit = browser.execute_script("return angular.element(document.getElementsByClassName('podContainer')[0]).scope().$parent.limitTotal;")
-    hardLimit = 1000
-
-    lazyLoadHandler(browser, totalMissions, hardLimit)
-
+def checkInMissions(browser)
     # Check In to all missions
     browser.divs(class: 'missionsPod').each do |pod|
     
@@ -102,6 +85,31 @@ def main()
             end
         end
     end
+end
+
+def booleanCheckIn(browser, pod)
+    missionId = pod.button.attribute_value('event-label').split('_')[2]
+    missionUrl = "https://www.werally.com/missions/details/#{missionId}/"
+    browser.execute_script("window.open('#{missionUrl}');")
+    browser.windows.last.use do
+        # Wait until we have the progress section loaded
+        until browser.div(class: 'dailyProgress').exists? do sleep 1 end
+        # Check In if not already
+        yesBtn = browser.button(class: 'yesBtn')
+        if (yesBtn.exists?) then yesBtn.click end
+        browser.windows.last.close
+    end
+end
+
+def main() 
+    email, password = validateInputParameters(ARGV)
+    
+    # Using Chrome for this  
+    browser = Watir::Browser.new :chrome
+    
+    login(browser, email, password)    
+    goToMissionsPage(browser)
+    checkInMissions(browser)
 
     browser.quit
 end
