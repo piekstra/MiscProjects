@@ -16,6 +16,9 @@ You will also need to have `chromedriver.exe` in a folder that is added to your 
 #### Chrome WebDriver
 You can download the webdriver [here](http://chromedriver.chromium.org/downloads "here"). Simply download the latest release, which should be called something like `chromedriver_win32.zip`. Extract the contents of the .zip file to a folder on your computer. Next, go to your `system environment variables` and add that folder path to your `Path` variable. This will allow the script to use the Chrome browser environment in an automated fashion.
 
+##### Chrome WebDriver Version
+Written and tested with ChromeDriver 2.38 (Chrome v65-67)
+
 ##### Ruby Version
 Written and tested with Ruby 2.4.4-1 (x86)
 
