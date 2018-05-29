@@ -60,9 +60,7 @@ def main()
     
         # Skip missions that can only be checked in on a mobile device
         mobileOnly = pod.div(class: 'mobileCheckIn').exists?
-        if mobileOnly
-            next
-        end
+        next if mobileOnly
             
         progressTotal = pod.div(class: 'progressTotal').text   
         
