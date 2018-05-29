@@ -6,7 +6,7 @@ This small ruby script will go to the WeRally website, login with your provided 
 In Command Prompt:
 
 ```sh
-ruby AutomatedRallyCheckIn.rb "rallyAccountEmail" "rallyAccountPassword"
+ruby AutomatedRallyCheckInTabs.rb "rallyAccountEmail" "rallyAccountPassword"
 ```
 
 ### Requirements
