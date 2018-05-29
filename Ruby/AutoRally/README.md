@@ -6,7 +6,7 @@ This small ruby script will go to the WeRally website, login with your provided 
 In Command Prompt:
 
 ```sh
-ruby AutomatedRallyCheckIn.rb rallyAccountEmail rallyAccountPassword
+ruby AutomatedRallyCheckIn.rb "rallyAccountEmail" "rallyAccountPassword"
 ```
 
 ### Requirements
@@ -26,8 +26,8 @@ Written and tested with Ruby 2.4.4-1 (x86)
 In Command Prompt:
 
 ```sh
-gem 'watir'  
-gem 'watir-scroll'  
+gem install 'watir'  
+gem install 'watir-scroll'  
 ```
 
 ##### Rally
