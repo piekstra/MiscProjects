@@ -69,9 +69,9 @@ def checkInMissions(browser)
             booleanCheckIn(browser, pod)
         else 
             # Extract the remaining progress required (i.e. 30 (minutes))
-            remainingProgress = progressTotal.scan(/\d+/)[0].to_i
+            remainingProgress = progressTotal.scan(/((\d+\.)?\d+)/)[0][0].to_f
             # If no progress is required, don't do anything
-            if remainingProgress > 0
+            if remainingProgress > 0.0
                 # Set the progress input - this has to be done before checking in, otherwise
                 # the button is disabled and the check in fails
                 pod.text_field(class: 'checkInInput').set(remainingProgress)
