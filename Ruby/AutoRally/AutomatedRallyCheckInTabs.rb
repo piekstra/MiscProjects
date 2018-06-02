@@ -30,7 +30,7 @@ end
 
 def goToMissionsPage(browser)
     # Goto Missions
-    browser.goto browser.a(id: 'navMissionsBtn').href
+    browser.elements(id: 'navMissionsBtn')[0].click
     # Wait for the page to finish loading what we need
     # We need the following element (the parent of the podContainer) to exist 
     # for the script we execute to get the totalMissions
