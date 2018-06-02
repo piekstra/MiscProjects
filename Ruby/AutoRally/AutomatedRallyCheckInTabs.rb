@@ -114,4 +114,10 @@ def main()
     browser.quit
 end
 
+startTime = Time.now
 main()
+endTime = Time.now
+totalTime = endTime - startTime
+timeMessage = Time.at(totalTime).utc.strftime("%H:%M:%S")
+
+puts "Time elapsed: #{timeMessage}"
