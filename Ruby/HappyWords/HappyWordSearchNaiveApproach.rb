@@ -21,8 +21,10 @@ textSentences.each do |sentence|
     # Look for the Joy Words in the sentence
     # The count of joy words is the score
     sentenceWithJoyScore = SentenceWithJoyScore.new(sentence)
+    wordsToSearch = sentence.split(' ').map(&:downcase)
+    
     joyWords.each do |word|
-        wordOcurrences = sentence.split(' ').map(&:downcase).count word.downcase
+        wordOcurrences = wordsToSearch.count word.downcase
         sentenceWithJoyScore.addJoyWordWithOcurrence(word, wordOcurrences) if wordOcurrences > 0
     end
     
