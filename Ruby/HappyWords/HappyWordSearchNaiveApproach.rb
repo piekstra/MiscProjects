@@ -1,4 +1,3 @@
-require_relative 'JoyWordWithOcurrences'
 require_relative 'SentenceWithJoyScore'
 require_relative 'SentenceGroupWithJoyScore'
 require_relative 'HappyWordSearch'
@@ -17,9 +16,9 @@ def Search(article, joyWords)
         sentenceWithJoyScore = SentenceWithJoyScore.new(sentence)
         wordsToSearch = sentence.split(' ').map(&:downcase)
         
-        joyWords.each do |word|
-            wordOcurrences = wordsToSearch.count word
-            sentenceWithJoyScore.addJoyWordWithOcurrence(word, wordOcurrences) if wordOcurrences > 0
+        wordsToSearch.each do |word|
+            found = joyWords.include? word
+            sentenceWithJoyScore.addJoyWord word if found
         end
         
         topSentence = sentenceWithJoyScore.dup if sentenceWithJoyScore.JoyScore > topSentence.JoyScore

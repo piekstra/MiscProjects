@@ -1,4 +1,3 @@
-require_relative 'JoyWordWithOcurrences'
 require_relative 'SentenceWithJoyScore'
 require_relative 'SentenceGroupWithJoyScore'
 require_relative 'BinarySearch'
@@ -18,8 +17,8 @@ def Search(article, joyWords)
         sentenceWithJoyScore = SentenceWithJoyScore.new(sentence)
         wordsToSearch = sentence.split(' ').map(&:downcase)
         wordsToSearch.each do |word|
-            matchCount = BinarySearch.CountOccurrences joyWords, word
-            sentenceWithJoyScore.addJoyWordWithOcurrence(word, matchCount) if matchCount > 0
+            found = BinarySearch.InArray joyWords, word
+            sentenceWithJoyScore.addJoyWord word if found
         end
         
         topSentence = sentenceWithJoyScore.dup if sentenceWithJoyScore.JoyScore > topSentence.JoyScore
