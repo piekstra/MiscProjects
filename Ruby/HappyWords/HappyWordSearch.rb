@@ -19,7 +19,7 @@ class HappyWordSearch
         end
     end
 
-    def self.TimedSearch(article, joyWords, findMethod)
+    def self.TimedSearch(article, words, findMethod)
         startTime = Time.now
  
         textSentences = article.scan(/[^\.!?]+[\.!?]/)
@@ -35,7 +35,7 @@ class HappyWordSearch
             sentenceWithJoyScore = SentenceWithJoyScore.new(sentence)
             wordsToSearch = sentence.split(' ').map(&:downcase)
             wordsToSearch.each do |word|
-                found = findMethod.call joyWords, word
+                found = findMethod.call words, word
                 sentenceWithJoyScore.addJoyWord word if found
             end
             
