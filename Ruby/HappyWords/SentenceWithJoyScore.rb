@@ -1,15 +1,13 @@
-require_relative 'JoyWordWithOcurrences'
-
 class SentenceWithJoyScore    
     def initialize(sentence)
         @sentence = sentence
-        @joyWordsWithOcurrences = []
+        @joyWordsInSentence = []
         @joyScore = 0
     end
     
-    def addJoyWordWithOcurrence(word, ocurrences)
-        @joyWordsWithOcurrences.push(JoyWordWithOcurrences.new(word, ocurrences))
-        @joyScore += ocurrences
+    def addJoyWord(word)
+        @joyWordsInSentence.push(word)
+        @joyScore += 1
     end
     
     def JoyScore
