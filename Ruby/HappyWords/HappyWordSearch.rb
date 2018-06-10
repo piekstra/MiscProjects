@@ -1,5 +1,6 @@
 require_relative 'SentenceWithJoyScore'
 require_relative 'SentenceGroupWithJoyScore'
+require 'newrelic_rpm'
 
 class HappyWordSearch
     def self.ReadArticle(file='sample_article_text.txt')
@@ -53,6 +54,7 @@ class HappyWordSearch
         puts "Total article score: #{textTotalScore}"
         puts "Highest single-sentence score: #{topSentence.JoyScore}"
         puts "Highest sentence group score: #{topSentenceGroup.JoyScore}"
+        puts "Memory usage (MB): #{NewRelic::Agent::Samplers::MemorySampler.new.sampler.get_sample}"
         puts "Elapsed time: #{runtime}"
     end
 end
