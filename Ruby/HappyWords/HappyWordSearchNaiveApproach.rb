@@ -1,44 +1,44 @@
 require_relative 'JoyWordWithOcurrences'
 require_relative 'SentenceWithJoyScore'
 require_relative 'SentenceGroupWithJoyScore'
+require_relative 'HappyWordSearch'
 
-startTime = Time.now
+def Search(article, joyWords)
+    textSentences = article.scan(/[^\.!?]+[\.!?]/)
 
-joyWordFile = 'sample_joy_words.txt'
-textToSearch = 'sample_article_text.txt'
+    topSentence = SentenceWithJoyScore.new(nil)
+    currentSentenceGroup = SentenceGroupWithJoyScore.new
+    topSentenceGroup = SentenceGroupWithJoyScore.new
+    textTotalScore = 0
 
-joyWords = File.read(joyWordFile).downcase.split(', ')
-text = File.read(textToSearch)    
-textSentences = text.scan(/[^\.!?]+[\.!?]/)
-
-topSentence = SentenceWithJoyScore.new(nil)
-currentSentenceGroup = SentenceGroupWithJoyScore.new
-topSentenceGroup = SentenceGroupWithJoyScore.new
-# Total score for the entire text
-textTotalScore = 0
-
-textSentences.each do |sentence|
-    # Look for the Joy Words in the sentence
-    # The count of joy words is the score
-    sentenceWithJoyScore = SentenceWithJoyScore.new(sentence)
-    wordsToSearch = sentence.split(' ').map(&:downcase)
-    
-    joyWords.each do |word|
-        wordOcurrences = wordsToSearch.count word.downcase
-        sentenceWithJoyScore.addJoyWordWithOcurrence(word, wordOcurrences) if wordOcurrences > 0
+    textSentences.each do |sentence|
+        # Look for the Joy Words in the sentence
+        # The count of joy words is the score
+        sentenceWithJoyScore = SentenceWithJoyScore.new(sentence)
+        wordsToSearch = sentence.split(' ').map(&:downcase)
+        
+        joyWords.each do |word|
+            wordOcurrences = wordsToSearch.count word
+            sentenceWithJoyScore.addJoyWordWithOcurrence(word, wordOcurrences) if wordOcurrences > 0
+        end
+        
+        topSentence = sentenceWithJoyScore.dup if sentenceWithJoyScore.JoyScore > topSentence.JoyScore
+        
+        currentSentenceGroup.addSentence(sentenceWithJoyScore)   
+        topSentenceGroup = currentSentenceGroup.dup if currentSentenceGroup.JoyScore > topSentenceGroup.JoyScore
+        
+        textTotalScore += sentenceWithJoyScore.JoyScore
     end
-    
-    topSentence = sentenceWithJoyScore.dup if sentenceWithJoyScore.JoyScore > topSentence.JoyScore
-    
-    currentSentenceGroup.addSentence(sentenceWithJoyScore)   
-    topSentenceGroup = currentSentenceGroup.dup if currentSentenceGroup.JoyScore > topSentenceGroup.JoyScore
-    
-    textTotalScore += sentenceWithJoyScore.JoyScore
+
+    resultMessage = "Total article score: #{textTotalScore}\n"
+    resultMessage += "Highest scoring sentence: #{topSentence.JoyScore}\n"
+    resultMessage += "Highest scoring sentence group: #{topSentenceGroup.JoyScore}\n"
 end
 
-endTime = Time.now
+article = HappyWordSearch.ReadArticle()
+words = HappyWordSearch.ReadSearchWords()
+runtime, results = HappyWordSearch.TimedSearch(article, words, method(:Search))
 
-puts "Total score: #{textTotalScore}"
-puts "Highest scoring (#{topSentence.JoyScore}) sentence: #{topSentence.Sentence}"
-puts "Highest scoring (#{topSentenceGroup.JoyScore}) group of sentences: #{topSentenceGroup.Sentences}"
-puts "Time elapsed: #{endTime - startTime}"
+puts "Results: #{results}"
+puts "Elapsed time: #{runtime}"
+
