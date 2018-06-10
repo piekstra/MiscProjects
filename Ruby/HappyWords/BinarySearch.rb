@@ -18,13 +18,30 @@ class BinarySearch
         return midIdx
     end
 
+    # Requires that arr be sorted
+    def self.SearchIteratively(arr, searchItem, startIdx, endIdx)
+        while startIdx <= endIdx
+            midIdx = ((endIdx-startIdx) / 2) + startIdx
+            
+            if arr[midIdx] < searchItem
+                startIdx = midIdx+1
+            elsif arr[midIdx] > searchItem
+                endIdx = midIdx-1
+            else
+                return midIdx
+            end
+        end
+
+        return -1
+    end
+
     # Requires arr be sorted
     def self.InArray(arr, searchItem)
         if !arr
             return false
         end
 
-        result = Search arr, searchItem, 0, arr.length-1
+        result = SearchIteratively arr, searchItem, 0, arr.length-1
 
         return result >= 0
     end
@@ -35,7 +52,7 @@ class BinarySearch
             return 0
         end
         
-        idx = Search arr, searchItem, 0, arr.length-1
+        idx = SearchIteratively arr, searchItem, 0, arr.length-1
 
         # Not found, no ocurrences
         if idx < 0
