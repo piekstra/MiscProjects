@@ -1,10 +1,6 @@
 def Traverse(node, words = [], word = "")
-    if !node
-        return
-    end
-
     node.each do |key, value|
-        if key == 'value'
+        if key == 'val'
             words.push([word, value])
         else
             Traverse value, words, word + key
@@ -12,6 +8,24 @@ def Traverse(node, words = [], word = "")
     end
 
     return words
+end
+
+def TraverseIterativeWithTopN(root, topN)
+    topWords = []
+    nodeStack = [[root, ""]]
+    while nodeStack.any?
+        node,word = nodeStack.pop
+        node.each do |key, value|
+            if key == 'val'
+                topWords.insert topWords.index {|pair| pair[1] < value} || -1, [word, value]
+                topWords.pop if topWords.length > topN
+            else
+                nodeStack.push [value, word+key]
+            end
+        end
+    end
+
+    return topWords
 end
 
 def PrefixTreeApproach(inputFile, topN)
@@ -22,34 +36,26 @@ def PrefixTreeApproach(inputFile, topN)
         file.each_char do |char|
             char = char.downcase
             if char >= 'a' && char <= 'z'
-                if !node[char]
-                    node[char] = {}
-                end
-
+                node[char] = {} if !node[char]
                 node = node[char]
-            else
-                if node != root
-                    if !node['value']
-                        node['value'] = 1
-                    else
-                        node['value'] += 1
-                    end
-
-                    node = root
-                end
+            elsif node != root
+                node['val'] = (node['val'] || 0) + 1
+                node = root
             end
         end
     end
 
-    topWords = []
-    words = Traverse root
-    words.each do |word, frequency|
-        topWords.insert topWords.index {|pair| pair[1] > frequency} || -1, [word, frequency]
-        if topWords.length > topN
-            topWords = topWords.drop(1)
-        end
-    end
+    #topWords = []
+    #words = Traverse root
+    #words.each do |word, frequency|
+    #    topWords.insert topWords.index {|pair| pair[1] > frequency} || -1, [word, frequency]
+    #    if topWords.length > topN
+    #        topWords = topWords.drop(1)
+    #    end
+    #end
 
+    topWords = TraverseIterativeWithTopN root, topN
+    
     return topWords
 end
 
