@@ -3,39 +3,28 @@
 require 'json'
 require 'stringio'
 
-# Complete the arrayManipulation function below.
-def arrayManipulation(n, queries)
-    values = Array.new(n+1, 0)
-    
-    queries.each do |a, b, k|
-        values[a] += k
-        values[b+1] -= k if b < n
-    end
-
-    max = 0
-    currentVal = 0
-    values.each do |val|
-        currentVal += val
-        max = currentVal if currentVal > max
-    end
-    
-    return max
-end
-
 n, m = 0, 0
 firstLine = true
-queries = nil
+values = nil
 File.readlines(ARGV[0]).each do |line|
     if firstLine
-	firstLine = false
-	n, m = line.split(' ').map(&:to_i)
-	queries = []
+        firstLine = false
+        n, m = line.split(' ').map(&:to_i)
+        values = Array.new(n+1, 0)
+        queries = []
     else
-        queries.push line.split(' ').map(&:to_i)
+        a,b,k = line.split(' ').map(&:to_i)
+        values[a] += k
+        values[b+1] -= k if b < n
     end    
 end
 
-result = arrayManipulation n, queries
+max = 0
+currentVal = 0
+values.each do |val|
+    currentVal += val
+    max = currentVal if currentVal > max
+end
 
-puts "Success: #{File.read(ARGV[1]).to_i == result}"
+puts "Success: #{File.read(ARGV[1]).to_i == max}"
 
