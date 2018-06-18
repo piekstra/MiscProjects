@@ -19,9 +19,6 @@ def dist(a, b, tree, distCache)
     ad, bd = 0,0
     as, bs = a, b
     while as != bs
-        while bs > as
-            bs = tree[bs/2]
-        end
         if as > bs
             as = tree[as]
             ad += 1
@@ -48,7 +45,7 @@ results = []
 
 # maintain a cache of distances
 distCache = []
-doOnce = true
+
 File.readlines(ARGV[0]).each_with_index do |line, index|
     vals = line.split(' ').map(&:to_i)
     if index == 0
@@ -59,12 +56,6 @@ File.readlines(ARGV[0]).each_with_index do |line, index|
         tree[b] = a
         distCache[b] = 0
     else
-        if doOnce
-            i = tree.length - 1
-            d = 0
-            distCache[i]
-            doOnce = false
-        end
         if k == 0
             k = vals[0]
         else
