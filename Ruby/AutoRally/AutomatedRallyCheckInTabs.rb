@@ -98,6 +98,9 @@ def checkInMissions(browser, consoleLogging = false)
                 until browser.div(class: 'completionContainer').exists? do sleep 1 end
                 browser.div(class: 'completionContainer').button.click
                 until !browser.div(class: 'completionContainer').exists? do sleep 1 end
+                # The page refreshes after the container closes so we have to go through
+                # the missions page again
+                goToMissionsPage(browser, consoleLogging)
             end
         end
     end
