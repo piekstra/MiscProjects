@@ -25,7 +25,7 @@ def insertIntoSortedList(list, val):
         list.insert(start+1, val)
         
 def getMedian(list):
-    mid = int(len(sortedList)/2)
+    mid = int(len(list)/2)
     if len(list) % 2 == 1:
         return list[mid]
     return (list[mid-1] + list[mid]) / 2
